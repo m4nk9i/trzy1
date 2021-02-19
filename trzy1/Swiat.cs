@@ -21,6 +21,11 @@ namespace trzy1
          //   przedmioty.gatroslin = gatunkiRoslin;
         }
 
+        public static void Wykonaj()
+        {
+            postaci.Wykonaj();
+        }
+
         static void Tabela_roslin()
         {
 
@@ -42,6 +47,47 @@ namespace trzy1
             gatunkiRoslin[3].energia = 10;
             gatunkiRoslin[3].czas_wzrostu = 3;
 
+        }
+
+        public static Sciezka ZnajdzSciezke(Wek2d pocz, Wek2d koniec)
+        {
+            Sciezka tsciezka = new Sciezka();
+            if (pocz.x<koniec.x)
+            {
+                for (int i=(int)pocz.x;i<=koniec.x;i++)
+                {
+                    Wek2d kaf = new Wek2d(i,(int)pocz.y);
+                    tsciezka.ktoredy.Add(kaf);
+
+                }
+            }
+            if (pocz.x>koniec.x)
+            {
+                for (int i=(int)pocz.x;i>=koniec.x; i--)
+                {
+                    Wek2d kaf = new Wek2d(i, (int)pocz.y);
+                    tsciezka.ktoredy.Add(kaf);
+                }
+            }
+
+            if (pocz.y < koniec.y)
+            {
+                for (int i = (int)pocz.y; i <= koniec.y; i++)
+                {
+                    Wek2d kaf = new Wek2d((int)koniec.x, i);
+                    tsciezka.ktoredy.Add(kaf);
+                }
+            }
+            if (pocz.y > koniec.y)
+            {
+                for (int i = (int)pocz.y; i >= koniec.y; i--)
+                {
+                    Wek2d kaf = new Wek2d((int)koniec.x,i);
+                    tsciezka.ktoredy.Add(kaf);
+                }
+            }
+
+            return tsciezka;
         }
 
         public void InitRzeczy()
@@ -82,7 +128,9 @@ namespace trzy1
             glowny.plecak = plecak_glownego;
             glowny.poz.x = 4;
             glowny.poz.y = 5;
+           // glowny.sciezka = ZnajdzSciezke(glowny.poz, new Wek2d(6, 7));
             postaci.Dodaj(glowny);
+            
 
         }
 

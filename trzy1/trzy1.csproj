@@ -59,7 +59,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Rozkaz.cs" />
     <Compile Include="Rzecz.cs" />
+    <Compile Include="Sciezka.cs" />
     <Compile Include="Swiat.cs" />
     <Compile Include="Uzytk.cs" />
     <EmbeddedResource Include="Form1.resx">

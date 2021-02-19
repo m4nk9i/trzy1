@@ -16,9 +16,11 @@ namespace trzy1
 
     public partial class Form1 : Form
     {
-        Graphics graf;
+        Graphics graf,tgraf;
         public List<ObrazOwoca> obrazkiowocow;
         public List<Image> obrazkimapy,obrazkiludzia;
+        Bitmap bm;
+        Wek2d myszku;
 
 
         public void ruszGlownego(int px,int py)
@@ -99,6 +101,11 @@ namespace trzy1
             Program.ziemia.InitRzeczy();
             Program.ziemia.InitPostaci();
             Program.ziemia.InitMapy();
+            bm = new Bitmap(panel1.Width, panel1.Height);
+            
+            tgraf = Graphics.FromImage(bm);
+            myszku = new Wek2d();
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -115,7 +122,7 @@ namespace trzy1
             {
                 if (rz.typ == Typ_rzeczy.ROSLINA)
                 {
-                    graf.DrawImage(obrazkiowocow[((Roslina)(rz)).gatunek].obraz[0], (rz.poz.x) * 32, (rz.poz.y) * 32);
+                    tgraf.DrawImage(obrazkiowocow[((Roslina)(rz)).gatunek].obraz[0], (rz.poz.x) * 32, (rz.poz.y) * 32);
                 }
             }
         }
@@ -129,13 +136,13 @@ namespace trzy1
                     {
                         case Typ_kafla.SCIANA:
                             
-                                graf.DrawImage(obrazkimapy[2],i*32,j*32);
+                                tgraf.DrawImage(obrazkimapy[2],i*32,j*32);
                                 break;
                        case Typ_kafla.ZIEMIA:
-                                graf.DrawImage(obrazkimapy[1],i * 32,j * 32);
+                                tgraf.DrawImage(obrazkimapy[1],i * 32,j * 32);
                                 break;
                         case Typ_kafla.TRAWA:
-                            graf.DrawImage(obrazkimapy[0], i * 32, j * 32);
+                           tgraf.DrawImage(obrazkimapy[0], i * 32, j * 32);
                             break;
 
                     }
@@ -147,16 +154,51 @@ namespace trzy1
         {
             foreach(Postac po in Swiat.postaci.czlonkowie)
             {
-                graf.DrawImage(obrazkiludzia[0], po.poz.x * 32, po.poz.y * 32);
+                tgraf.DrawImage(obrazkiludzia[0], po.poz.x * 32, po.poz.y * 32);
             }
+        }
+
+        private void rysujSciezke(Sciezka sc)
+        {
+            if (sc.ktoredy.Count > 0)
+            {
+                Wek2d pun = new Wek2d(sc.ktoredy[0].x, sc.ktoredy[0].y);
+                foreach (Wek2d ka in sc.ktoredy)
+                {
+                    tgraf.DrawLine(Pens.Red, pun.x * 32 + 16, pun.y * 32 + 16, ka.x * 32 + 16, ka.y * 32 + 16);
+                    pun.y = ka.y;
+                    pun.x = ka.x;
+
+                }
+            }
+        }
+
+
+        private void rysujSciezki()
+        {
+            if (Swiat.postaci.czlonkowie[0].rozkazy.Count > 0)
+            {
+                if (Swiat.postaci.czlonkowie[0].rozkazy[0].rodzaj == Typ_rozkazu.IDZDO)
+                {
+                    rysujSciezke(((RoIdzdo)(Swiat.postaci.czlonkowie[0].rozkazy[0])).scie);
+                }
+            }
+        }
+        private void RysujUI()
+        {
+            tgraf.DrawRectangle(Pens.Yellow, myszku.x * 32, myszku.y * 32, 32, 32);
         }
 
         private void rysuj()
         {
-            graf.Clear(Color.White);
+           // graf.Clear(Color.White);
             rysujMape();
             rysujPrzedmioty();
             rysujPostacie();
+            rysujSciezki();
+            RysujUI();
+
+            graf.DrawImage(bm, new Point(0, 0));
 
         }
 
@@ -166,6 +208,8 @@ namespace trzy1
 
 
         }
+
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -187,11 +231,87 @@ namespace trzy1
             ruszGlownego(1, 0);
         }
 
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //Wek2d mpos = new Wek2d(e.X / 32.0f, e.Y / 32.0f);
+            //Sciezka sc = new Sciezka();
+            
+            RoIdzdo ro1 = new RoIdzdo(myszku);
+            //Swiat.postaci.czlonkowie[0].sciezka = Swiat.ZnajdzSciezke(Swiat.postaci.czlonkowie[0].poz, myszku);
+            ro1.scie = Swiat.ZnajdzSciezke(Swiat.postaci.czlonkowie[0].poz, myszku);
+            RoStoj ro3 = new RoStoj();
+
+            switch (Swiat.mapaswiata.kafeleks[(int)myszku.x, (int)myszku.y].typ)
+            {
+                case Typ_kafla.TRAWA:
+                    RoPodnies ro2 = new RoPodnies();
+
+                    Swiat.postaci.czlonkowie[0].rozkazy.Clear();
+                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro1);
+                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro2);
+                    //Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
+                    break;
+                case Typ_kafla.ZIEMIA:
+                    //Wek2d pk = new Wek2d();
+                    RoKop ro4 = new RoKop(new Wek2d(myszku));
+                    RoZnajdzdroge ro5 = new RoZnajdzdroge(new Wek2d(myszku));
+                    //ro5.scie=Swiat.ZnajdzSciezke()
+                    Swiat.postaci.czlonkowie[0].rozkazy.Clear();
+                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro1);
+                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro4);
+                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro5);
+                   // Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
+                    break;
+
+                case Typ_kafla.SCIANA:
+                    Swiat.postaci.czlonkowie[0].rozkazy.Clear();
+                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro1);
+                    //Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
+                    break;
+
+
+            }
+            rysuj();
+            textBox1.Text += Swiat.postaci.czlonkowie[0].ListaRozkazow();
+
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Swiat.Wykonaj();
+            rysuj();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+         //   textBox1.Text += Swiat.postaci.czlonkowie[0].sciezka.ToString();
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+          //  rysuj();
+           // e.Graphics.CopyFromScreen(new Point(10, 10), new Point(20, 20), new Size(70, 70));
+
+        }
+
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            myszku.x = e.X / 32;
+            myszku.y = e.Y / 32;
+            
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            textBox1.Text+=Swiat.postaci.czlonkowie[0].ListaRozkazow();
+        }
+
         private void button4_Click(object sender, EventArgs e)
         {
             ruszGlownego(-1, 0);
         }
     }
+
 
     public class ObrazOwoca
     {

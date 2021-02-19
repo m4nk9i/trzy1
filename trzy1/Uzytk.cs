@@ -9,6 +9,23 @@ namespace trzy1
     class Wek2d
     {
         public float x, y;
+        public Wek2d()
+        { }
+        public Wek2d(float gx,float gy)
+        {
+            x = gx;
+            y = gy;
+        }
+        public Wek2d(int gx,int gy)
+        {
+            x = gx;
+            y = gy;
+        }
+        public Wek2d (Wek2d frr)
+        {
+            x = frr.x;
+            y = frr.y;
+        }
         public override string ToString()
         {
             return ("poz ("+x.ToString()+" "+y.ToString()+")");
@@ -53,7 +70,7 @@ namespace trzy1
             return t_str;
         }
 
-        public Rzecz znajdz (Wek2d gdzie)
+        public Rzecz Znajdz (Wek2d gdzie)
         {
             Rzecz t_co = null;
             foreach (Rzecz r in zawartosc)
@@ -97,6 +114,13 @@ namespace trzy1
             return t_str;
         }
 
+        public void Wykonaj()
+        {
+            foreach(Postac po in czlonkowie)
+            {
+                po.Wykonaj();
+            }
+        }
 
     }
 }
