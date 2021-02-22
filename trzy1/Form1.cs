@@ -21,16 +21,17 @@ namespace trzy1
         public List<Image> obrazkimapy,obrazkiludzia;
         Bitmap bm;
         Wek2d myszku;
+        Postac wybrany;
 
 
         public void ruszGlownego(int px,int py)
         {
-            Wek2d pozglownego = Swiat.postaci.czlonkowie[0].poz;
+            Wek2d pozglownego = wybrany.poz;
             if (Swiat.mapaswiata.kafeleks[(int)(pozglownego.x)+px,(int)pozglownego.y+py].typ==Typ_kafla.TRAWA)
             {
                 pozglownego.x += px;
                 pozglownego.y += py;
-                Swiat.postaci.czlonkowie[0].Podnies(pozglownego);
+                wybrany.Podnies(pozglownego);
             }
             rysuj();
         }
@@ -101,6 +102,7 @@ namespace trzy1
             Program.ziemia.InitRzeczy();
             Program.ziemia.InitPostaci();
             Program.ziemia.InitMapy();
+            wybrany = Swiat.postaci.czlonkowie[0];
             bm = new Bitmap(panel1.Width, panel1.Height);
             
             tgraf = Graphics.FromImage(bm);
@@ -176,11 +178,11 @@ namespace trzy1
 
         private void rysujSciezki()
         {
-            if (Swiat.postaci.czlonkowie[0].rozkazy.Count > 0)
+            if (wybrany.rozkazy.Count > 0)
             {
-                if (Swiat.postaci.czlonkowie[0].rozkazy[0].rodzaj == Typ_rozkazu.IDZDO)
+                if (wybrany.rozkazy[0].rodzaj == Typ_rozkazu.IDZDO)
                 {
-                    rysujSciezke(((RoIdzdo)(Swiat.postaci.czlonkowie[0].rozkazy[0])).scie);
+                    rysujSciezke(((RoIdzdo)(wybrany.rozkazy[0])).scie);
                 }
             }
         }
@@ -233,46 +235,56 @@ namespace trzy1
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
-            //Wek2d mpos = new Wek2d(e.X / 32.0f, e.Y / 32.0f);
-            //Sciezka sc = new Sciezka();
-            
-            RoIdzdo ro1 = new RoIdzdo(myszku);
-            //Swiat.postaci.czlonkowie[0].sciezka = Swiat.ZnajdzSciezke(Swiat.postaci.czlonkowie[0].poz, myszku);
-            ro1.scie = Swiat.ZnajdzSciezke(Swiat.postaci.czlonkowie[0].poz, myszku);
-            RoStoj ro3 = new RoStoj();
-
-            switch (Swiat.mapaswiata.kafeleks[(int)myszku.x, (int)myszku.y].typ)
+            Postac t_po = Swiat.postaci.Znajdz(myszku);
+            if (t_po != null)
             {
-                case Typ_kafla.TRAWA:
-                    RoPodnies ro2 = new RoPodnies();
-
-                    Swiat.postaci.czlonkowie[0].rozkazy.Clear();
-                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro1);
-                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro2);
-                    //Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
-                    break;
-                case Typ_kafla.ZIEMIA:
-                    //Wek2d pk = new Wek2d();
-                    RoKop ro4 = new RoKop(new Wek2d(myszku));
-                    RoZnajdzdroge ro5 = new RoZnajdzdroge(new Wek2d(myszku));
-                    //ro5.scie=Swiat.ZnajdzSciezke()
-                    Swiat.postaci.czlonkowie[0].rozkazy.Clear();
-                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro1);
-                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro4);
-                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro5);
-                   // Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
-                    break;
-
-                case Typ_kafla.SCIANA:
-                    Swiat.postaci.czlonkowie[0].rozkazy.Clear();
-                    Swiat.postaci.czlonkowie[0].rozkazy.Add(ro1);
-                    //Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
-                    break;
-
-
+                wybrany = t_po;
             }
-            rysuj();
-            textBox1.Text += Swiat.postaci.czlonkowie[0].ListaRozkazow();
+            else
+            {
+
+                //Wek2d mpos = new Wek2d(e.X / 32.0f, e.Y / 32.0f);
+                //Sciezka sc = new Sciezka();
+
+                RoIdzdo ro1 = new RoIdzdo(myszku);
+                //Swiat.postaci.czlonkowie[0].sciezka = Swiat.ZnajdzSciezke(Swiat.postaci.czlonkowie[0].poz, myszku);
+                //ro1.scie = Swiat.ZnajdzSciezke(Swiat.postaci.czlonkowie[0].poz, myszku);
+                ro1.scie = Swiat.ZnajdzSciezke(wybrany.poz, myszku);
+                RoStoj ro3 = new RoStoj();
+
+                switch (Swiat.mapaswiata.kafeleks[(int)myszku.x, (int)myszku.y].typ)
+                {
+                    case Typ_kafla.TRAWA:
+                        RoPodnies ro2 = new RoPodnies();
+
+                        wybrany.rozkazy.Clear();
+                        wybrany.rozkazy.Add(ro1);
+                        wybrany.rozkazy.Add(ro2);
+                        //Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
+                        break;
+                    case Typ_kafla.ZIEMIA:
+                        //Wek2d pk = new Wek2d();
+                        RoKop ro4 = new RoKop(new Wek2d(myszku));
+                        RoZnajdzdroge ro5 = new RoZnajdzdroge(new Wek2d(myszku));
+                        //ro5.scie=Swiat.ZnajdzSciezke()
+                        wybrany.rozkazy.Clear();
+                        wybrany.rozkazy.Add(ro1);
+                        wybrany.rozkazy.Add(ro4);
+                        wybrany.rozkazy.Add(ro5);
+                        // Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
+                        break;
+
+                    case Typ_kafla.SCIANA:
+                        wybrany.rozkazy.Clear();
+                        wybrany.rozkazy.Add(ro1);
+                        //Swiat.postaci.czlonkowie[0].rozkazy.Add(ro3);
+                        break;
+
+
+                }
+                rysuj();
+                textBox1.Text += wybrany.ListaRozkazow();
+            }
 
         }
 

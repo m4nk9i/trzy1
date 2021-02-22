@@ -29,6 +29,9 @@ namespace trzy1
             rozkazy = new List<Rozkaz>();
             
         }
+        /// <summary>
+        /// todo - do wywalenia
+        /// </summary>
         public void Rysuj()
         {
 

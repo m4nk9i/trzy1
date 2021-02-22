@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace trzy1
 {
+    /// <summary>
+    /// klasa postaci, przedmiotow i tego wszstiego
+    /// </summary>
     class Swiat
     {
 
@@ -14,6 +17,9 @@ namespace trzy1
         public static StrRoslina[] gatunkiRoslin;
         public static Mapa mapaswiata;
 
+        /// <summary>
+        /// konstruktor domyslny
+        /// </summary>
         static Swiat()
         {
             postaci = new Zaloga();
@@ -21,11 +27,18 @@ namespace trzy1
          //   przedmioty.gatroslin = gatunkiRoslin;
         }
 
+        /// <summary>
+        /// przeliczenie postaci, przedmiotow itp
+        /// </summary>
         public static void Wykonaj()
         {
             postaci.Wykonaj();
         }
 
+        /// <summary>
+        /// inicjacja tabeli roslin, 
+        /// todo - zrobic z pliku
+        /// </summary>
         static void Tabela_roslin()
         {
 
@@ -49,6 +62,13 @@ namespace trzy1
 
         }
 
+        /// <summary>
+        /// szuka ssciezki miedzuy punktami
+        /// todo- kiepski algorytm poprawic na A* czy cos
+        /// </summary>
+        /// <param name="pocz">punkt startowy</param>
+        /// <param name="koniec">pnkt koncowy</param>
+        /// <returns>zwraca sciezke</returns>
         public static Sciezka ZnajdzSciezke(Wek2d pocz, Wek2d koniec)
         {
             Sciezka tsciezka = new Sciezka();
@@ -90,11 +110,20 @@ namespace trzy1
             return tsciezka;
         }
 
+        /// <summary>
+        /// ustawienie pierwotne rzeczy
+        /// </summary>
+
         public void InitRzeczy()
         {
             Tabela_roslin();
             InitRoslin();
         }
+
+        /// <summary>
+        /// pierwotne ustawienie roslinek
+        /// todo - zrobic z pliku
+        /// </summary>
 
         public void InitRoslin()
         {
@@ -113,6 +142,10 @@ namespace trzy1
 
         }
 
+        /// <summary>
+        /// ustawienie pierwotne postaci
+        /// todo- zrobic z pliku
+        /// </summary>
         public void InitPostaci()
         {
             Postac glowny = new Postac();
@@ -130,10 +163,24 @@ namespace trzy1
             glowny.poz.y = 5;
            // glowny.sciezka = ZnajdzSciezke(glowny.poz, new Wek2d(6, 7));
             postaci.Dodaj(glowny);
-            
+
+
+            //dodatkowy ludzik
+
+            glowny = new Postac();
+            plecak_glownego = new Zbiornik();
+            glowny.plecak = plecak_glownego;
+            glowny.poz.x = 1;
+            glowny.poz.y = 1;
+            postaci.Dodaj(glowny);
 
         }
 
+
+        /// <summary>
+        /// wypisuje postaci na debug
+        /// todo- wywalic
+        /// </summary>
         public void WypiszPostaci()
         {
             //postaci.Wypisz();
@@ -141,16 +188,29 @@ namespace trzy1
             System.Diagnostics.Debug.WriteLine(przedmioty.ToString());
         }
 
+        /// <summary>
+        /// zwraca to stringu liste postaci
+        /// </summary>
+        /// <returns>string z lista postaci</returns>
+
         public string GetPostaciStr()
         {
             return (postaci.ToString());
         }
 
+        /// <summary>
+        /// zwraca to stringu liste przedmiotow
+        /// </summary>
+        /// <returns>string z lista przedmiotow</returns>
         public string GetPrzedmiotyStr()
         {
             return (przedmioty.ToString());
         }
 
+        /// <summary>
+        /// ustawienia pierwotne mapy
+        /// todo- z pliku
+        /// </summary>
         public void InitMapy()
         {
             mapaswiata = new Mapa();
