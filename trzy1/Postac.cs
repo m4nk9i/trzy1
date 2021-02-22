@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace trzy1
 {
+    /// <summary>
+    /// klasa Postac, opisuje pojedynczego ludka
+    /// </summary>
     class Postac
     {
         public Wek2d poz=new Wek2d();
@@ -14,6 +17,9 @@ namespace trzy1
         public String nazwa;
     //    public Sciezka sciezka;
         public List<Rozkaz> rozkazy;
+        /// <summary>
+        /// konstruktor domyslny
+        /// </summary>
         public Postac()
         {
             poz.x = 0;
@@ -27,6 +33,9 @@ namespace trzy1
         {
 
         }
+        /// <summary>
+        /// wykonuje ruchy postaci i inne takie przeliczenia
+        /// </summary>
 
         public void Wykonaj()
         {
@@ -93,10 +102,20 @@ namespace trzy1
             }
         }
 
+        /// <summary>
+        /// zapisuje nazwe postac, polozenie i zawartosc plecaka do stringa
+        /// </summary>
+        /// <returns>string z nazwa, polozeniem i zawartoscia plecaka </returns>
+
         public override string ToString()
         {
             return ("postac "+nazwa+" +["+poz.ToString()+"]\r\nplecak:\r\n"+plecak.ToString());
         }
+
+        /// <summary>
+        /// zapisuje liste rozkazow postaci do stringa
+        /// </summary>
+        /// <returns>string z lista rozkazow postaci</returns>
 
         public string ListaRozkazow()
         {
@@ -108,11 +127,22 @@ namespace trzy1
             return tstr;
         }
 
+        /// <summary>
+        /// wypisuje nazwe postaci i zawartosc plecaka na Debug
+        /// </summary> 
+        /// <remarks>
+        /// todo-do wywalenia
+        /// </remarks>
+
         public void Wypisz()
         {
             System.Diagnostics.Debug.WriteLine("postac "+nazwa);
             plecak.Wypisz();
         }
+        /// <summary>
+        /// podnosi zawartosci danego pola mapy, nie sprawdza czy postac znajduje sie w tym miejscu.
+        /// </summary>
+        /// <param name="gdzie">zmienna z adresem pola mapy z ktorego podnosimy</param>
         public void Podnies(Wek2d gdzie)
         {
             

@@ -6,26 +6,53 @@ using System.Threading.Tasks;
 
 namespace trzy1
 {
+    /// <summary>
+    /// prosta klasa ze wspolrzednymi 2D 
+    /// </summary>
     class Wek2d
     {
         public float x, y;
+        /// <summary>
+        /// konstruktor domslny
+        /// </summary>
         public Wek2d()
-        { }
+        {
+            x = 0;
+            y = 0;
+        }
+        /// <summary>
+        /// konstruktor z ustawieniem polozenia
+        /// </summary>
+        /// <param name="gx">wspolrzedna x jako float</param>
+        /// <param name="gy">wspolrzedna y jako float</param>
         public Wek2d(float gx,float gy)
         {
             x = gx;
             y = gy;
         }
+        /// <summary>
+        /// konstruktor z ustawieniem polozenia
+        /// </summary>
+        /// <param name="gx">wspolrzedna x jako int</param>
+        /// <param name="gy">wspolrzedna y jako int</param>
         public Wek2d(int gx,int gy)
         {
             x = gx;
             y = gy;
         }
+        /// <summary>
+        /// konstruktor z ustawieniem polozenia
+        /// </summary>
+        /// <param name="frr">istniejaca zmienna z ktorej kopijemy wspolrzedne</param>
         public Wek2d (Wek2d frr)
         {
             x = frr.x;
             y = frr.y;
         }
+        /// <summary>
+        /// wyspiuje polozenie do stringa
+        /// </summary>
+        /// <returns>string ze wspolrzednymi</returns>
         public override string ToString()
         {
             return ("poz ("+x.ToString()+" "+y.ToString()+")");
